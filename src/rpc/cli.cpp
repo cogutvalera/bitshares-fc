@@ -14,6 +14,12 @@
 # endif
 #endif
 
+#ifdef WIN32
+# include <signal.h>
+#else
+# include <csignal>
+#endif
+
 namespace fc { namespace rpc {
 
 static std::vector<std::string>& cli_commands()
@@ -107,6 +113,11 @@ void cli::run()
       catch ( const fc::exception& e )
       {
          std::cout << e.to_detail_string() << "\n";
+
+         if (e.code() == fc::canceled_exception_code)
+         {
+            raise(SIGINT);
+         }
       }
    }
 }
