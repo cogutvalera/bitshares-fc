@@ -72,6 +72,11 @@ namespace fc {
 
       void set_exception( const fc::exception_ptr& e );
 
+      fc::thread* blocked_thread()
+      {
+         return _blocked_thread;
+      }
+
     protected:
       void _wait( const microseconds& timeout_us );
       void _wait_until( const time_point& timeout_us );
@@ -297,6 +302,8 @@ namespace fc {
         {
         }
       }
+
+      fc::thread* blocked_thread() { return m_prom->blocked_thread(); }
 
       /// @pre valid()
       bool ready()const { return m_prom->ready(); }

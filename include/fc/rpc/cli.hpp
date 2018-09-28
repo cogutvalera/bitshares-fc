@@ -32,6 +32,8 @@ namespace fc { namespace rpc {
 
          void set_prompt( const string& prompt );
 
+         void quit_blocked_thread(){ _run_complete.blocked_thread()->quit(); }
+
       private:
          void run();
 
