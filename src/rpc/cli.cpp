@@ -217,6 +217,14 @@ static int cli_check_secret(const char *source)
 }
 
 /***
+ * @brief flush secret mode
+ */
+static void cli_flush_secret_mode()
+{
+   std::cout.flush();
+}
+
+/***
  * @brief Read input from the user
  * @param prompt the prompt to display
  * @param line what the user typed
@@ -240,6 +248,7 @@ void cli::getline( const fc::string& prompt, fc::string& line)
       rl_set_complete_func(my_rl_complete);
       rl_set_list_possib_func(cli_completion);
       rl_set_check_secret_func(cli_check_secret);
+      rl_set_flush_secret_mode_func(cli_flush_secret_mode);
 
       static fc::thread getline_thread("getline");
       getline_thread.async( [&](){
