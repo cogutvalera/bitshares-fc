@@ -14,15 +14,7 @@
 # endif
 #endif
 
-#include <boost/regex.hpp>
-
 namespace fc { namespace rpc {
-
-static boost::regex& cli_regex_secret()
-{
-   static boost::regex regex_expr;
-   return regex_expr;
-}
 
 static std::vector<std::string>& cli_commands()
 {
@@ -78,11 +70,6 @@ void cli::format_result( const string& method, std::function<string(variant,cons
 void cli::set_prompt( const string& prompt )
 {
    _prompt = prompt;
-}
-
-void cli::set_regex_secret( const string& expr )
-{
-   cli_regex_secret() = expr;
 }
 
 void cli::run()
@@ -204,19 +191,6 @@ static int cli_completion(char *token, char ***array)
 }
 
 /***
- * @brief regex match for secret information
- * @param source the incoming text source
- * @returns integer 1 in event of regex match for secret information, otherwise 0
- */
-static int cli_check_secret(const char *source)
-{
-   if (!cli_regex_secret().empty() && boost::regex_match(source, cli_regex_secret()))
-      return 1;
-   
-   return 0;
-}
-
-/***
  * @brief Read input from the user
  * @param prompt the prompt to display
  * @param line what the user typed
@@ -239,7 +213,6 @@ void cli::getline( const fc::string& prompt, fc::string& line)
    {
       rl_set_complete_func(my_rl_complete);
       rl_set_list_possib_func(cli_completion);
-      rl_set_check_secret_func(cli_check_secret);
 
       static fc::thread getline_thread("getline");
       getline_thread.async( [&](){
